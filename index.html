@@ -1,74 +1,304 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PanLab</title>
-    <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; line-height: 1.6; }
-        .header { background: #2c3e50; color: white; padding: 40px 20px; text-align: center; }
-        .nav { display: flex; justify-content: center; gap: 20px; margin: 20px 0; }
-        .nav a { color: #34495e; text-decoration: none; font-weight: bold; }
-        .section { margin: 40px 0; }
-        .card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 20px; margin: 10px 0; }
-        .footer { text-align: center; padding: 20px; background: #f8f9fa; margin-top: 40px; }
-        @media (max-width: 768px) { .header { padding: 20px; } }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PanLab</title>
+  <style>
+    /* 全局样式 */
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #0f172a; /* 暗黑背景 */
+      color: #ffffff;
+      line-height: 1.6;
+    }
+    a {
+      color: #6366f1; /* 链接颜色 */
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* 导航栏 */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: #1e293b; /* 导航栏背景 */
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+    .navbar a {
+      color: #ffffff;
+      margin: 0 10px;
+      font-weight: bold;
+      transition: color 0.3s ease;
+    }
+    .navbar a:hover {
+      color: #6366f1;
+    }
+
+    /* 首页头部 */
+    .header {
+      text-align: center;
+      padding: 5rem 1rem;
+      background: linear-gradient(135deg, #6366f1, #ec4899); /* 渐变背景 */
+      color: #ffffff;
+      clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+    }
+    .header h1 {
+      font-size: 2.5rem;
+      margin: 0;
+    }
+    .header p {
+      font-size: 1.2rem;
+      margin-top: 0.5rem;
+    }
+
+    /* 内容区域 */
+    .section {
+      padding: 2rem;
+      text-align: center;
+    }
+    .section h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    .card-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+    }
+    .card {
+      background: #1e293b;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      width: 300px;
+      padding: 1.5rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card-paper {
+      background: #1e293b;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      width: 1300px;
+      padding: 1.5rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card-join {
+      background: #1e293b;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      width: 615px;
+      padding: 1.5rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      text-align: left;
+      text-indent: 2em; /* 缩进两个字符宽度 */
+    }
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 8px 12px rgba(0, 0, 0, 0.3);
+    }
+    .card h3 {
+      font-size: 1.5rem;
+      margin: 0 0 1rem;
+    }
+    .card p {
+      font-size: 1rem;
+      color: #d1d5db;
+    }
+
+    /* 动态粒子背景 */
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+
+    /* 响应式调整 */
+    @media (max-width: 768px) {
+      .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .header h1 {
+        font-size: 2rem;
+      }
+      .header p {
+        font-size: 1rem;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="header">
-        <h1>智能计算实验室</h1>
-        <p>聚焦人工智能与大数据技术研究</p>
-    </div>
+<!-- 动态粒子背景 -->
+<canvas id="particles"></canvas>
 
-    <nav class="nav">
-        <a href="#research">研究方向</a>
-        <a href="#members">团队成员</a>
-        <a href="#publications">成果展示</a>
-        <a href="#join">加入我们</a>
-    </nav>
+<!-- 导航栏 -->
+<nav class="navbar">
+  <div>
+    <a href="#home">首页</a>
+    <a href="#research">研究方向</a>
+    <a href="#members">团队成员</a>
+    <a href="#publications">成果展示</a>
+    <a href="#join">加入我们</a>
+  </div>
+</nav>
 
-    <div class="section" id="research">
-        <h2>研究方向</h2>
-        <div class="card">
-            <h3>人工智能算法</h3>
-            <p>深度学习、强化学习等前沿技术研究</p>
-        </div>
-        <div class="card">
-            <h3>大数据系统</h3>
-            <p>高效数据处理与分析平台构建</p>
-        </div>
-    </div>
+<!-- 首页头部 -->
+<header class="header" id="home">
+  <h1>PanLan</h1>
+  <p>聚焦基因组组装与基因AI大模型研究</p>
+</header>
 
-    <div class="section" id="members">
-        <h2>团队成员</h2>
-        <div class="card">
-            <h3>张三 教授</h3>
-            <p>实验室主任，研究方向：机器学习</p>
-        </div>
-        <div class="card">
-            <h3>李四 博士</h3>
-            <p>研究方向：自然语言处理</p>
-        </div>
+<!-- 研究方向 -->
+<section class="section" id="research">
+  <h2>研究方向</h2>
+  <div class="card-container">
+    <div class="card">
+      <h3>人工智能算法</h3>
+      <p>深度学习、强化学习等前沿技术研究</p>
     </div>
+    <div class="card">
+      <h3>大数据系统</h3>
+      <p>高效数据处理与分析平台构建</p>
+    </div>
+    <div class="card">
+      <h3>行业应用</h3>
+      <p>推动AI在医疗、金融等领域的落地</p>
+    </div>
+  </div>
+</section>
 
-    <div class="section" id="publications">
-        <h2>成果展示</h2>
-        <div class="card">
-            <h3>2023年代表性论文</h3>
-            <p>《基于深度学习的医疗影像分析》发表于Nature Machine Intelligence</p>
-        </div>
+<!-- 团队成员 -->
+<section class="section" id="members">
+  <h2>团队成员</h2>
+  <div class="card-container">
+    <div class="card">
+      <h3>张三 教授</h3>
+      <p>实验室主任，研究方向：机器学习</p>
     </div>
+    <div class="card">
+      <h3>李四 博士</h3>
+      <p>研究方向：自然语言处理</p>
+    </div>
+  </div>
+</section>
 
-    <div class="section" id="join">
-        <h2>加入我们</h2>
-        <div class="card">
-            <p>诚招博士后/科研助理，简历投递：<a href="mailto:hr@lab.com">hr@lab.com</a></p>
-        </div>
+<!-- 成果展示 -->
+<section class="section" id="publications">
+  <h2>成果展示</h2>
+  <div class="card-container">
+    <div class="card-paper">
+      <h3>2024年</h3>
+      <p>1. D. Xu†, J. Yang†, H. Wen†, W. Feng†, X. Zhang, X. Hui, J. Yue, Y. Xu*, F. Chen*, <b>W. Pan*</b>. CentIER: Accurate centromere identification for plant genomes, Plant Communications, vol. 5, no. 10, 2024.</p>
+      <p>2. Y. Lu†, J. Yang†, C. Li†, Y. Tian, R. Chang, D. Kong, S. Yang, Y. Wang, Y. Zhang, X. Zhu*, <b>W. Pan*</b>, S. Kong*. Efficient and easy-to-use capturing three-dimensional metagenome interactions with GutHi-C, iMeta, 2024.</p>
+      <p>3. W. Yu†, H. Luo†, J. Yang†, S. Zhang†, H. Jiang†, X. Zhao, X. Hui, D. Sun, L. Li, X. Wei*, S.Lonardi*, <b>W. Pan*</b>. “Comprehensive assessment of 11 de novo HiFi assemblers on complex eukaryotic genomes and metagenomes.” Genome Research, 2024.</p>
+      <h3>2023年</h3>
+      <p>4. L. Ding†, S. Wu†, Z. Hou†, A. Li, Y. Xu, H. Feng, <b>W. Pan*</b>, J. Ruan*. “Improving Error-Correcting Capability in DNA Digital Storage Via Soft-Decision Decoding.” National Science Review, 2023.</p>
+      <p>5. L. Shang†*, W. He†, T. Wang†, Y. Yang†, Q. Xu†, X. Zhao†, L. Yang, H. Zhang, X. Li, Y. Lv, W. Chen, S. Cao, X. Wang, B. Zhang, X. Liu, X. Yu, H. He, H. Wei, Y. Leng, C. Shi, M. Guo, Z. Zhang, B. Zhang, Q. Yuan, H. Qian, X. Cao, Y. Cui, Q. Zhang, X. Dai, C. Liu, L. Guo, Y. Zhou, X. Zheng, J. Ruan, Z. Cheng, <b>W. Pan*</b>, Q. Qian*. “A complete assembly of the rice Nipponbare reference genome.” Molecular Plant, vol 16, 2023.</p>
+      <p>6. D. Xu†, Y. Yang†, D. Gong†, X. Chen†, K. Jin, H. Jiang, W. Yu, J. Li*, J. Zhang*, <b>W. Pan*</b>. “GFAP: ultra-fast and accurate gene functional annotation software for plants.” Plant Physiology, 2023.</p>
+      <p>7. D. Xu†, J. Zhang†, X. Zhao†, Y. Hou, H. Jiang, W. He*, X. Ma*, <b>W. Pan*</b>. “CIDP: a multi-functional platform for designing CRISPR sgRNAs.” Horticulture Research, vol 10, 2023.</p>
+      <p>8. J. Yang†, X. Zhao†, H. Jiang†, Y. Yang†, Y. Hou, <b>W. Pan*</b>. “RAfilter: an algorithm for detecting and filtering false-positive alignments in repetitive genomic regions.” Horticulture Research, vol 10, 2023.</p>
+      <h3>2022年及之前</h3>
+      <p>9. D. Xu†, Y. Song†, X. Zhao, D. Gong, Y. Yang*, <b>W. Pan*</b>. “RAviz: a visualization tool for detecting false-positive alignments in repetitive genomic regions.” Horticulture Research, vol 9, 2022</p>
+      <p>10. <b>W. Pan*</b>, J. Ruan*. “En Route to Completion: What Is An Ideal Reference Genome?” Genomics, Proteomics & Bioinformatics, vol. 20, no. 1, pp. 1-3, 2022.</p>
+      <p>11. <b>W. Pan</b>, T. Jiang, S. Lonardi*. “OMGS: Optical Map-based Genome Scaffolding.” Proceedings of Conference on Research in Computational Molecular Biology (RECOMB), pp. 190-207, Washington, DC, 2019. 该文完整版发表于Journal of Computational Biology, vol. 27, no. 4, pp. 519-533, 2020.</p>
+      <p>12. <b>W. Pan</b>, S. Lonardi*. “Accurate detection of chimeric contigs via Bionano optical maps.” Bioinformatics, vol. 35, no. 10, pp. 1760-1762, 2019.</p>
+      <p>13. <b>W. Pan</b>, S. Wanamaker, A. Ah-Fong, H. Judelson, S. Lonardi*. “Novo&Stitch: Accurate Reconciliation of Genome Assemblies via Optical Maps.” Proceedings of Conference on Intelligent Systems for Molecular Biology (ISMB), Chicago, IL, 2018. 该文完整版发表于Bioinformatics, vol. 34, no. 13, pp. i43-i51, 2018.</p>
+      <p>14. <b>W. Pan</b>, B. Chen, Y. Xu*. “MetaObtainer: A Tool for Obtaining Specified Species from Metagenomic Reads of Next-generation Sequencing.” Interdisciplinary Sciences: Computational Life Sciences, vol. 7, no. 4, pp. 405-413, 2015.</p>
+      <p>15. <b>W. Pan</b>, Y. Zhao, Y. Xu*, F. Zhou*. “WinHAP2: an extremely fast haplotype phasing program for long genotype sequences.” BMC bioinformatics vol. 15, no. 1, pp. 164, 2014.</p>
     </div>
+  </div>
+</section>
 
-    <div class="footer">
-        <p>© 2023 智能计算实验室 | 地址：XX大学科技楼A座</p>
+<!-- 加入我们 -->
+<section class="section" id="join">
+  <h2>加入我们</h2>
+  <div class="card-container">
+    <div class="card-join">
+      <h4>深圳农业基因组研究所简介</h4>
+      <div>2014年，中国农业科学院和深圳市共建中国农业科学院深圳农业基因组研究所（以下简称基因组所）。2020年10月，经中共深圳市委机构编制委员会办公室批准，基因组所加挂“岭南现代农业科学与技术广东省实验室深圳分中心”牌子，实行“一套人马、两块牌子”的运行模式。建设以来，以农业基因组学为核心，先后成立了组学技术、合成生物学、植物基因组、动物基因组、生态基因组、食品科学等研究中心和相关技术平台，形成了以多组学技术、基因编辑技术和合成生物学技术为基础，以生物育种和食品健康为方向的“3+2”学科体系。2019年以来自然指数排名全国农业类科研院所前列，在包括 Science、Nature、Cell 等顶级期刊在内的杂志上发表论文1500多篇，其中《科学（Science）》《自然（Nature）》、《细胞（Cell）》主刊10篇、《期刊引证报告（JCR）》学科排名第一或影响因子高于8的高水平期刊论文292篇，在组学算法分析、精准基因编辑、杂交马铃薯全基因组选择育种等研究方向已居世界前列，多项成果入选中国生命科学、农业科学等重大进展。以基因组设计育种育成国审、省审新品种40余个，农业基因组学等研究领域占据世界前沿。</div>
+      <div>基因组所作为国内唯一一家专门从事农业基因组学研究的研究机构，集聚多方位科技资源，累计获批竞争性项目251项，其中国家级项目152项，累计批复金额达4.77亿元。构建了覆盖全产业链条的创新平台，获批热带作物生物育种全国重点实验室（和中国热科院等单位共建）、农业农村部基因组数据分析重点实验室、农业农村部合成生物学重点实验室、农业农村部畜禽生物组学重点实验室、中国农业科学院国际农业前沿科学中心、中国农业科学院深圳国际食品科学中心、深圳市农业基因组表型分析与利用重点实验室、深圳市农业合成生物学重点实验室、深圳市杂交马铃薯工程研究中心等科技创新平台。根据科技和产业发展的需求，建设了超算平台、组学技术平台、合成生物学技术平台、基因编辑平台、分子设计育种平台、生态安全平台等公共平台，以及综合试验农场。仪器设备累计3327台套，总值超1.72亿元，其中50万以上大型仪器55台套，实现100%开放共享。贯穿“种质资源收集—基因组分析—功能基因挖掘—分子设计育种—品种推广”全产业链条的创新平台已基本建成。为本项目搭建了基础研究平台，提供仪器设备保障和研究合作支撑，保障项目顺利实施。</div>
     </div>
+    <div class="card-join">
+      <h4>组学技术中心简介</h4>
+      <div>组学技术研究中心成立于2018年，专注于生物组学大数据的研究与应用，致力于推动BT（生物技术）与IT（信息技术）的深度融合。中心汇聚了3个农科院创新团队、12个课题组以及多名高层次人才，包括国家优青、农科院“领军人才”和深圳市高层次人才，在基因组学、算法开发和育种研究等领域具有深厚积累。</div>
+      <div>中心的研究方向涵盖AI赋能的多组学算法开发、高通量测序技术研发以及农业生物性状识别与解析。代表性成果包括三代序列组装算法（如WTDBG2、SMARTdenovo）、基于泛基因组的标记筛选工具（PanMarker），以及新型DNA断裂检测技术（DEtail-seq）。这些技术为基因组复杂区域的精准解析和功能注释提供了重要支持。</div>
+      <div>围绕《“十四五”生物经济发展规划》，中心聚焦农业组学大数据驱动的基因组设计育种技术，助力农业高质量发展。通过整合多组学数据，构建协同调控网络，挖掘核心基因群，为中心在农业育种、疾病研究等领域的应用奠定了坚实基础。中心将继续以技术创新为核心，推动生命科学与现代农业的进步。</div>
+      <h4>课题组简介</h4>
+      <div>潘玮华，研究员，博士生导师。2019年获美国加州大学河滨分校计算机科学博士学位和统计学硕士学位。2019-2020年在美国卡内基梅隆大学计算机学院计算生物学系担任Lane Fellow（博士后）。长期从事基因组学，尤其是基因组序列分析相关的生物信息算法研究。主要成果发表在顶级会议RECOMB、ISMB和专业期刊Genome Research、Plant Physiology、National Science Review、Molecular Plant、Bioinformatics、Genomics Proteomics & Bioinformatics等。主持国家自然科学基金面上项目、青年科学基金项目、深圳市优秀科技创新人才培养项目等科研项目。担任中国生物信息学学会（筹）生物信息算法专委会委员、中国生物工程学会计算生物学与生物信息学专委会委员等。担任Frontiers in Plant Science和Genes等期刊客座编辑。</div>
+      <h4>联系方式</h4>
+      <p>诚招博士后/科研助理，简历投递：<a href="mailto:hr@lab.com">hr@lab.com</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- 动态粒子背景脚本 -->
+<script>
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+
+  // 设置画布大小
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  // 创建粒子类
+  class Particle {
+    constructor(x, y, size, speedX, speedY, color) {
+      this.x = x;
+      this.y = y;
+      this.size = size;
+      this.speedX = speedX;
+      this.speedY = speedY;
+      this.color = color;
+    }
+    update() {
+      this.x += this.speedX;
+      this.y += this.speedY;
+
+      // 边界反弹
+      if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+      if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+    }
+    draw() {
+      ctx.fillStyle = this.color;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  // 初始化粒子数组
+  const particles = [];
+  for (let i = 0; i < 50; i++) {
+    const size = Math.random() * 3 + 1;
+    const x = Math.random() * canvas.width;
+    const y = Math.random() * canvas.height;
+    const speedX = Math.random() * 2 - 1;
+    const speedY = Math.random() * 2 - 1;
+    const color = `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.8)`;
+    particles.push(new Particle(x, y, size, speedX, speedY, color));
+  }
+
+  // 动画循环
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(particle => {
+      particle.update();
+      particle.draw();
+    });
+    requestAnimationFrame(animate);
+  }
+  animate();
+</script>
 </body>
 </html>
