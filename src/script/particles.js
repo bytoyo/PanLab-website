@@ -62,9 +62,9 @@ animate();
 
 
 // 页面加载完成后移除遮罩层
-window.onload = function () {
-    const loadingOverlay = document.getElementById('loading-overlay');
-    if (loadingOverlay) {
-        loadingOverlay.style.display = 'none';
-    }
-};
+// window.onload = function () {
+//     const loadingOverlay = document.getElementById('loading-overlay');
+//     if (loadingOverlay) {
+//         loadingOverlay.style.display = 'none';
+//     }
+// };
